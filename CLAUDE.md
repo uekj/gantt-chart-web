@@ -9,7 +9,7 @@
 - **Node.js**: Volta 管理（プロジェクトルートで自動切り替え）
 - **パッケージ管理**: pnpm（npm ではなく pnpm を使用）
 - **グローバルインストール**: Volta を使用（npm install -g ではなく volta install）
-- **推奨バージョン**: Node.js 22.16.0, pnpm 9.12.0
+- **推奨バージョン**: Node.js 22.16.0, pnpm 10.12.1
 
 ### パッケージ管理ルール
 

@@ -14,7 +14,7 @@ GitHub ActionsでPull Request作成時にE2Eテストを自動実行し、マー
   - PRが再オープンされた時（reopened）
 - **実行環境**: Ubuntu latest
 - **Node.js**: 22.16.0
-- **pnpm**: 9.12.0
+- **pnpm**: 10.12.1
 - **テスト**: Playwrightを使用したE2Eテスト
 
 ### 主な機能

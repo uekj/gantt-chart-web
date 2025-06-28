@@ -9,7 +9,7 @@
 - **Node.js**: Volta 管理（プロジェクトルートで自動切り替え）
 - **パッケージ管理**: pnpm（npm ではなく pnpm を使用）
 - **グローバルインストール**: Volta を使用（npm install -g ではなく volta install）
-- **推奨バージョン**: Node.js 22.16.0, pnpm 9.12.0
+- **推奨バージョン**: Node.js 22.16.0, pnpm 10.12.1
 
 ### パッケージ管理ルール
 
@@ -43,19 +43,6 @@ pnpm test:e2e:debug # デバッグモードで実行
 pnpm test          # ユニットテスト実行
 pnpm test:ui       # テストUI起動
 
-```
-
-## Project Structure
-
-```
-├── docs/             # ドキュメント（統合）
-├── app/              # Next.js App Router
-├── components/       # React コンポーネント
-├── lib/              # ユーティリティとロジック
-├── types/            # 型定義
-├── hooks/            # カスタムフック
-├── package.json      # 依存関係とスクリプト
-└── 設定ファイル群    # Next.js, TypeScript, Tailwind等
 ```
 
 ## Database

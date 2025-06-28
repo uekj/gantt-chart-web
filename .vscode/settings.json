@@ -1,0 +1,32 @@
+{
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "files.exclude": {
+    "node_modules": true,
+    ".next": true,
+    "local.db": true,
+    "test-results": true,
+    "playwright-report": true
+  },
+  "search.exclude": {
+    "node_modules": true,
+    ".next": true,
+    "pnpm-lock.yaml": true,
+    "local.db": true
+  },
+  "emmet.includeLanguages": {
+    "typescript": "html",
+    "typescriptreact": "html"
+  },
+  "tailwindCSS.includeLanguages": {
+    "typescript": "html",
+    "typescriptreact": "html"
+  },
+  "files.associations": {
+    "*.css": "tailwindcss"
+  }
+}

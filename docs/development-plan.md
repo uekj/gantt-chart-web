@@ -5,7 +5,7 @@
 ### 1.1 Node.js & Package Manager Setup
 - [ ] Verify Volta installation and configuration
 - [ ] Set up Node.js 22.16.0 via Volta
-- [ ] Install pnpm 9.12.0 via Volta
+- [ ] Install pnpm 10.12.1 via Volta
 - [ ] Verify package manager setup
 
 ### 1.2 Project Initialization

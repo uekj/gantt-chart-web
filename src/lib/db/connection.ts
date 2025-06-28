@@ -29,10 +29,10 @@ if (!isDevelopment) {
 const client = createClient({
   url: isDevelopment 
     ? 'file:./local.db' // Local SQLite for development
-    : process.env.TURSO_DATABASE_URL, // Turso for production (validated above)
+    : process.env.TURSO_DATABASE_URL as string, // Turso for production (validated above)
   authToken: isDevelopment 
     ? undefined 
-    : process.env.TURSO_AUTH_TOKEN // Validated above
+    : process.env.TURSO_AUTH_TOKEN as string // Validated above
 });
 
 // Create Drizzle instance

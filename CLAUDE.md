@@ -45,19 +45,6 @@ pnpm test:ui       # テストUI起動
 
 ```
 
-## Project Structure
-
-```
-├── docs/             # ドキュメント（統合）
-├── app/              # Next.js App Router
-├── components/       # React コンポーネント
-├── lib/              # ユーティリティとロジック
-├── types/            # 型定義
-├── hooks/            # カスタムフック
-├── package.json      # 依存関係とスクリプト
-└── 設定ファイル群    # Next.js, TypeScript, Tailwind等
-```
-
 ## Database
 
 - **ローカル開発**: SQLite (file:./local.db)

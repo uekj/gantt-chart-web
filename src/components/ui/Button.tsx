@@ -30,6 +30,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         className={cn(baseClasses, variants[variant], sizes[size], className)}
         ref={ref}
         disabled={disabled || loading}
+        aria-label={loading ? 'Loading...' : undefined}
         {...props}
       >
         {loading && (
@@ -55,16 +56,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             />
           </svg>
         )}
-
-        <button
-          className={cn(baseClasses, variants[variant], sizes[size], className)}
-          ref={ref}
-          disabled={disabled || loading}
-          aria-label={loading ? 'Loading...' : undefined}
-          {...props}
-        >
-          {/* ...button content... */}
-        </button>
         {children}
       </button>
     );

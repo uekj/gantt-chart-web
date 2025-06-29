@@ -33,16 +33,16 @@ async function createTaskHandler(request: NextRequest, { params }: { params: any
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   
-  if (startDate < today) {
+  if (startDate <= today) {
     return NextResponse.json(
-      error(ERROR_CODES.VALIDATION_ERROR, 'Start date cannot be in the past'),
+      error(ERROR_CODES.VALIDATION_ERROR, 'Start date cannot be before tomorrow'),
       { status: 400 }
     );
   }
   
-  if (endDate < today) {
+  if (endDate <= today) {
     return NextResponse.json(
-      error(ERROR_CODES.VALIDATION_ERROR, 'End date cannot be in the past'),
+      error(ERROR_CODES.VALIDATION_ERROR, 'End date cannot be before tomorrow'),
       { status: 400 }
     );
   }

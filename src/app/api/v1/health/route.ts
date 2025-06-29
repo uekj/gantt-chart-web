@@ -4,7 +4,7 @@ import { withErrorHandling } from '@/lib/api/middleware';
 import { db } from '@/lib/db/connection';
 import { sql } from 'drizzle-orm';
 
-async function healthHandler(request: NextRequest) {
+async function healthHandler() {
   // Test database connection
   const dbTest = await db.run(sql`SELECT 1 as healthy`);
   

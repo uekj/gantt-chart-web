@@ -3,6 +3,7 @@ import { success, error, ERROR_CODES } from '@/lib/api/types';
 import { withErrorHandling, getValidatedBody, getValidatedParams } from '@/lib/api/middleware';
 import { updateTaskSchema, taskParamsSchema } from '@/lib/api/schemas';
 import { getTaskById, updateTask, deleteTask } from '@/lib/db/queries/tasks';
+import { validateDateNotInPast } from '@/lib/utils';
 
 // GET /api/v1/projects/:id/tasks/:taskId
 async function getTaskHandler(request: NextRequest, { params }: { params: any }) {
@@ -26,19 +27,18 @@ async function updateTaskHandler(request: NextRequest, { params }: { params: any
   const body = await getValidatedBody(request, updateTaskSchema);
   
   // Validate dates are not in the past (if provided)
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  
-  if (body.startDate && new Date(body.startDate) < today) {
+  const startDateValidation = validateDateNotInPast(body.startDate, 'Start date');
+  if (!startDateValidation.isValid) {
     return NextResponse.json(
-      error(ERROR_CODES.VALIDATION_ERROR, 'Start date cannot be in the past'),
+      error(ERROR_CODES.VALIDATION_ERROR, startDateValidation.error!),
       { status: 400 }
     );
   }
   
-  if (body.endDate && new Date(body.endDate) < today) {
+  const endDateValidation = validateDateNotInPast(body.endDate, 'End date');
+  if (!endDateValidation.isValid) {
     return NextResponse.json(
-      error(ERROR_CODES.VALIDATION_ERROR, 'End date cannot be in the past'),
+      error(ERROR_CODES.VALIDATION_ERROR, endDateValidation.error!),
       { status: 400 }
     );
   }

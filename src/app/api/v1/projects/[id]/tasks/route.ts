@@ -4,6 +4,7 @@ import { withErrorHandling, getValidatedBody, getValidatedParams } from '@/lib/a
 import { createTaskSchema, projectParamsSchema } from '@/lib/api/schemas';
 import { getTasksByProject, createTask } from '@/lib/db/queries/tasks';
 import { projectExists } from '@/lib/db/queries/projects';
+import { validateDateNotInPast } from '@/lib/utils';
 
 // GET /api/v1/projects/:id/tasks
 async function getTasksHandler(request: NextRequest, { params }: { params: any }) {
@@ -28,21 +29,18 @@ async function createTaskHandler(request: NextRequest, { params }: { params: any
   const body = await getValidatedBody(request, createTaskSchema);
   
   // Validate dates are not in the past
-  const startDate = new Date(body.startDate);
-  const endDate = new Date(body.endDate);
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  
-  if (startDate <= today) {
+  const startDateValidation = validateDateNotInPast(body.startDate, 'Start date');
+  if (!startDateValidation.isValid) {
     return NextResponse.json(
-      error(ERROR_CODES.VALIDATION_ERROR, 'Start date cannot be before tomorrow'),
+      error(ERROR_CODES.VALIDATION_ERROR, startDateValidation.error!),
       { status: 400 }
     );
   }
   
-  if (endDate <= today) {
+  const endDateValidation = validateDateNotInPast(body.endDate, 'End date');
+  if (!endDateValidation.isValid) {
     return NextResponse.json(
-      error(ERROR_CODES.VALIDATION_ERROR, 'End date cannot be before tomorrow'),
+      error(ERROR_CODES.VALIDATION_ERROR, endDateValidation.error!),
       { status: 400 }
     );
   }

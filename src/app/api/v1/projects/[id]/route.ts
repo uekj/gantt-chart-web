@@ -3,6 +3,7 @@ import { success, error, ERROR_CODES } from '@/lib/api/types';
 import { withErrorHandling, getValidatedBody, getValidatedParams } from '@/lib/api/middleware';
 import { updateProjectSchema, projectParamsSchema } from '@/lib/api/schemas';
 import { getProjectById, updateProject, deleteProject } from '@/lib/db/queries/projects';
+import { validateDateNotInPast } from '@/lib/utils';
 
 // GET /api/v1/projects/:id
 async function getProjectHandler(request: NextRequest, { params }: { params: any }) {
@@ -26,26 +27,12 @@ async function updateProjectHandler(request: NextRequest, { params }: { params: 
   const body = await getValidatedBody(request, updateProjectSchema);
   
   // Validate start date is not in the past (if provided)
-  if (body.startDate) {
-    const startDate = new Date(body.startDate);
-    const today = new Date();
-    const todayUTC = new Date(
-      today.getUTCFullYear(),
-      today.getUTCMonth(),
-      today.getUTCDate()
+  const startDateValidation = validateDateNotInPast(body.startDate, 'Start date');
+  if (!startDateValidation.isValid) {
+    return NextResponse.json(
+      error(ERROR_CODES.VALIDATION_ERROR, startDateValidation.error!),
+      { status: 400 }
     );
-    const startDateUTC = new Date(
-      startDate.getUTCFullYear(),
-      startDate.getUTCMonth(),
-      startDate.getUTCDate()
-    );
-    
-    if (startDateUTC < todayUTC) {
-      return NextResponse.json(
-        error(ERROR_CODES.VALIDATION_ERROR, 'Start date cannot be in the past'),
-        { status: 400 }
-      );
-    }
   }
 
   const project = await updateProject(id, body);

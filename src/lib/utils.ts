@@ -38,6 +38,35 @@ export function isValidDate(dateString: string): boolean {
 export function isDateInPast(dateString: string): boolean {
   const date = new Date(dateString);
   const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  return date < today;
+  const todayUTC = new Date(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate());
+  const dateUTC = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+  return dateUTC < todayUTC;
+}
+
+// Date validation utility for API handlers
+export interface DateValidationResult {
+  isValid: boolean;
+  error?: string;
+}
+
+export function validateDateNotInPast(dateString: string, fieldName: string): DateValidationResult {
+  if (!dateString) {
+    return { isValid: true }; // Optional field, no validation needed
+  }
+  
+  if (!isValidDate(dateString)) {
+    return {
+      isValid: false,
+      error: `${fieldName} must be a valid date`
+    };
+  }
+  
+  if (isDateInPast(dateString)) {
+    return {
+      isValid: false,
+      error: `${fieldName} cannot be in the past`
+    };
+  }
+  
+  return { isValid: true };
 }

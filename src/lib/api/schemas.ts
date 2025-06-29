@@ -52,7 +52,13 @@ export const updateTaskSchema = z.object({
   name: z.string().min(1, 'Name is required').max(255, 'Name too long').optional(),
   startDate: dateString.optional(),
   endDate: dateString.optional()
-}).refine(data => {
+})
+// NOTE: This validation only checks date consistency when both startDate and endDate 
+// are provided in the update payload. It does not validate against existing data when 
+// only one date is updated. API handlers should perform additional validation by 
+// fetching existing task data and checking date consistency during partial updates 
+// to ensure the new date doesn't conflict with the existing counterpart date.
+.refine(data => {
   if (data.startDate && data.endDate) {
     const start = new Date(data.startDate);
     const end = new Date(data.endDate);

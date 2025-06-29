@@ -6,12 +6,19 @@ import { sql } from 'drizzle-orm';
 
 async function healthHandler() {
   // Test database connection
-  const dbTest = await db.run(sql`SELECT 1 as healthy`);
+  let dbStatus = 'disconnected';
+  try {
+    await db.run(sql`SELECT 1 as healthy`);
+    dbStatus = 'connected';
+  } catch (error) {
+    // Database is disconnected, but don't throw - this is a health check
+    console.error('Health check database error:', error);
+  }
   
   const health = {
     status: 'ok',
     timestamp: new Date().toISOString(),
-    database: dbTest ? 'connected' : 'disconnected',
+    database: dbStatus,
     version: '1.0.0'
   };
 

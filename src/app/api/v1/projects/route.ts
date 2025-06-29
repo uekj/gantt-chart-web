@@ -17,9 +17,10 @@ async function createProjectHandler(request: NextRequest) {
   // Validate start date is not in the past
   const startDate = new Date(body.startDate);
   const today = new Date();
-  today.setHours(0, 0, 0, 0); // Reset time to compare dates only
+  const todayUTC = new Date(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate());
+  const startDateUTC = new Date(startDate.getUTCFullYear(), startDate.getUTCMonth(), startDate.getUTCDate());
   
-  if (startDate < today) {
+  if (startDateUTC < todayUTC) {
     return NextResponse.json(
       error(ERROR_CODES.VALIDATION_ERROR, 'Start date cannot be in the past'),
       { status: 400 }

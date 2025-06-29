@@ -23,7 +23,7 @@ export async function createTask(data: {
     }
 
     // Validate task start date is not before project start date
-    if (new Date(data.startDate) < new Date(project[0].startDate)) {
+    if (data.startDate < project[0].startDate) {
       throw new Error('Task start date cannot be before project start date');
     }
 

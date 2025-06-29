@@ -45,3 +45,6 @@ docs/feature-status.md
 test-results/
 playwright-report/
 .playwright/
+
+# Project management docs (local only)
+docs/project-docs/

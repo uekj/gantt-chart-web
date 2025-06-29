@@ -62,7 +62,11 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
 
           {/* Actions */}
           <div className="flex items-center space-x-4">
-            <button className="text-gray-400 hover:text-gray-600 transition-colors">
+            <button 
+              className="text-gray-400 hover:text-gray-600 transition-colors"
+              onClick={() => {/* Add functionality */}}
+              aria-label="User menu"
+            >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5-5 5-5H15v10z" />
               </svg>

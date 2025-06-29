@@ -1,7 +1,9 @@
 import { z } from 'zod';
 
 // Date validation helper
-const dateString = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Must be in YYYY-MM-DD format');
+const dateString = z.string()
+  .regex(/^\d{4}-\d{2}-\d{2}$/, 'Must be in YYYY-MM-DD format')
+  .refine(val => !isNaN(Date.parse(val)), 'Must be a valid date');
 
 // Project schemas
 export const createProjectSchema = z.object({

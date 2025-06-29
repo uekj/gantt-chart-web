@@ -67,13 +67,24 @@ const Sidebar: React.FC<SidebarProps> = ({ className, isOpen = true, onClose }) 
             <span className="text-lg font-semibold text-gray-900">Menu</span>
             <button
               onClick={onClose}
+              onKeyDown={(e) => e.key === 'Enter' && onClose?.()}
               className="text-gray-400 hover:text-gray-600 transition-colors"
+              aria-label="Close sidebar"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
-          </div>
 
           {/* Navigation */}
           <nav className="flex-1 px-4 py-6 space-y-2">

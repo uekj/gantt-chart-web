@@ -1,8 +1,10 @@
 import { AppLayout } from '@/components/layout';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, Button } from '@/components/ui';
 import Link from 'next/link';
+import { getGanttStatistics } from '@/lib/db/queries/combined';
 
-export default function Dashboard() {
+export default async function Dashboard() {
+  const stats = await getGanttStatistics();
   return (
     <AppLayout>
       <div className="p-6">
@@ -23,7 +25,7 @@ export default function Dashboard() {
               <CardDescription>Manage your projects and track progress</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold mb-2">0</div>
+              <div className="text-2xl font-bold mb-2">{stats.totalProjects}</div>
               <Link href="/projects">
                 <Button variant="outline" size="sm">View Projects</Button>
               </Link>
@@ -41,8 +43,10 @@ export default function Dashboard() {
               <CardDescription>Track your tasks and deadlines</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold mb-2">0</div>
-              <p className="text-sm text-gray-600">No active tasks</p>
+              <div className="text-2xl font-bold mb-2">{stats.totalTasks}</div>
+              <p className="text-sm text-gray-600">
+                {stats.totalTasks === 0 ? 'No active tasks' : `${stats.totalTasks} task${stats.totalTasks === 1 ? '' : 's'}`}
+              </p>
             </CardContent>
           </Card>
 

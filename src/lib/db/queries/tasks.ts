@@ -117,7 +117,7 @@ export async function updateTask(
         .where(eq(projects.id, currentTask[0].projectId))
         .limit(1);
 
-      if (project.length > 0 && new Date(data.startDate) < new Date(project[0].startDate)) {
+      if (project.length > 0 && data.startDate < project[0].startDate) {
         throw new Error('Task start date cannot be before project start date');
       }
     }

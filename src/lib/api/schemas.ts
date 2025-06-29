@@ -10,6 +10,14 @@ export const createProjectSchema = z.object({
   name: z.string().min(1, 'Name is required').max(255, 'Name too long'),
   startDate: dateString,
   insertAfterProjectId: z.number().optional()
+}).refine(data => {
+  const startDate = new Date(data.startDate);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return startDate >= today;
+}, {
+  message: 'Start date cannot be in the past',
+  path: ['startDate']
 });
 
 export const updateProjectSchema = z.object({

@@ -85,6 +85,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className, isOpen = true, onClose }) 
                 />
               </svg>
             </button>
+          </div>
 
           {/* Navigation */}
           <nav className="flex-1 px-4 py-6 space-y-2">

@@ -107,11 +107,11 @@ export const semanticColors = {
   },
   
   gantt: {
-    project: colors.primary[500],
-    task: colors.secondary[400],
-    completed: colors.success[500],
-    inProgress: colors.primary[500],
-    notStarted: colors.gray[400],
-    overdue: colors.error[500],
+    project:    colors.primary[600],   // ↑ ratio ≥ 4.5
+    task:       colors.secondary[600], // ↑ ratio ≥ 4.5
+    completed:  colors.success[600],   // ↑ ratio ≥ 4.5
+    inProgress: colors.primary[600],   // ↑ ratio ≥ 4.5
+    notStarted: colors.gray[600],      // ↑ ratio ≥ 4.5
+    overdue:    colors.error[600],     // ↑ ratio ≥ 4.5
   },
 } as const;

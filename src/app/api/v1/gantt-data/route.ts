@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { success } from '@/lib/api/types';
 import { withErrorHandling } from '@/lib/api/middleware';
 import { getGanttData } from '@/lib/db/queries/combined';
 
-async function ganttDataHandler(request: NextRequest) {
+async function ganttDataHandler() {
   const data = await getGanttData();
   
   return NextResponse.json(success(data));

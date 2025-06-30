@@ -1,6 +1,5 @@
 import { db } from './connection';
 import { projects, tasks } from './schema';
-import { eq } from 'drizzle-orm';
 
 async function seed() {
   try {

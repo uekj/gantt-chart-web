@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { success } from '@/lib/api/types';
 import { withErrorHandling } from '@/lib/api/middleware';
 import { db } from '@/lib/db/connection';

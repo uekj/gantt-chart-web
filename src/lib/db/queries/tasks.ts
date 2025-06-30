@@ -1,6 +1,6 @@
 import { eq, sql, max, and } from 'drizzle-orm';
 import { db } from '../connection';
-import { tasks, projects, type Task, type NewTask } from '../schema';
+import { tasks, projects, type Task } from '../schema';
 
 // Create a new task
 export async function createTask(data: {

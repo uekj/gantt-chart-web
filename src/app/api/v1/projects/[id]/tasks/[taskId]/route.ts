@@ -4,25 +4,18 @@ import { withErrorHandling, getValidatedBody, getValidatedParams } from '@/lib/a
 import { updateTaskSchema, taskParamsSchema } from '@/lib/api/schemas';
 import { getTaskById, updateTask, deleteTask } from '@/lib/db/queries/tasks';
 import { validateDateNotInPast } from '@/lib/utils';
+import { createNestedGetHandler, createNestedDeleteHandler } from '@/lib/api/handler-utils';
 
-// GET /api/v1/projects/:id/tasks/:taskId
-async function getTaskHandler(request: NextRequest, { params }: { params: any }) {
-  const { taskId } = getValidatedParams(taskParamsSchema, params);
-  
-  const task = await getTaskById(taskId);
-  
-  if (!task) {
-    return NextResponse.json(
-      error(ERROR_CODES.NOT_FOUND, 'Task not found'),
-      { status: 404 }
-    );
-  }
-  
-  return NextResponse.json(success(task));
-}
+// GET /api/v1/projects/:id/tasks/:taskId - Using generic handler
+const getTaskHandler = createNestedGetHandler(
+  getTaskById,
+  taskParamsSchema,
+  'Task not found',
+  'taskId'
+);
 
 // PUT /api/v1/projects/:id/tasks/:taskId
-async function updateTaskHandler(request: NextRequest, { params }: { params: any }) {
+async function updateTaskHandler(request: NextRequest, { params }: { params: Record<string, string | string[]> }) {
   const { taskId } = getValidatedParams(taskParamsSchema, params);
   const body = await getValidatedBody(request, updateTaskSchema);
   
@@ -55,21 +48,14 @@ async function updateTaskHandler(request: NextRequest, { params }: { params: any
   return NextResponse.json(success(task));
 }
 
-// DELETE /api/v1/projects/:id/tasks/:taskId
-async function deleteTaskHandler(request: NextRequest, { params }: { params: any }) {
-  const { taskId } = getValidatedParams(taskParamsSchema, params);
-  
-  const deleted = await deleteTask(taskId);
-  
-  if (!deleted) {
-    return NextResponse.json(
-      error(ERROR_CODES.NOT_FOUND, 'Task not found'),
-      { status: 404 }
-    );
-  }
-  
-  return NextResponse.json(success({ deleted: true }));
-}
+// DELETE /api/v1/projects/:id/tasks/:taskId - Using generic handler
+const deleteTaskHandler = createNestedDeleteHandler(
+  deleteTask,
+  taskParamsSchema,
+  'Task not found',
+  'Task deleted successfully',
+  'taskId'
+);
 
 export const GET = withErrorHandling(getTaskHandler);
 export const PUT = withErrorHandling(updateTaskHandler);

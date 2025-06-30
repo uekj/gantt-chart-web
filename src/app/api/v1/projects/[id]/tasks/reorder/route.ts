@@ -6,7 +6,7 @@ import { reorderTasks } from '@/lib/db/queries/tasks';
 import { projectExists } from '@/lib/db/queries/projects';
 
 // PUT /api/v1/projects/:id/tasks/reorder
-async function reorderTasksHandler(request: NextRequest, { params }: { params: any }) {
+async function reorderTasksHandler(request: NextRequest, { params }: { params: Record<string, string | string[]> }) {
   const { id: projectId } = getValidatedParams(projectParamsSchema, params);
   const body = await getValidatedBody(request, reorderTasksSchema);
   

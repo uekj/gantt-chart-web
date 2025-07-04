@@ -6,7 +6,7 @@ import { getProjects, createProject } from '@/lib/db/queries/projects';
 import { validateDateNotInPast } from '@/lib/utils';
 
 // GET /api/v1/projects
-async function getProjectsHandler(request: NextRequest) {
+async function getProjectsHandler() {
   const projects = await getProjects();
   return NextResponse.json(success(projects));
 }

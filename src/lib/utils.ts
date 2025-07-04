@@ -49,7 +49,7 @@ export interface DateValidationResult {
   error?: string;
 }
 
-export function validateDateNotInPast(dateString: string, fieldName: string): DateValidationResult {
+export function validateDateNotInPast(dateString: string | undefined, fieldName: string): DateValidationResult {
   if (!dateString) {
     return { isValid: true }; // Optional field, no validation needed
   }

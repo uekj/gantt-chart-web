@@ -5,26 +5,17 @@ import { createTaskSchema, projectParamsSchema } from '@/lib/api/schemas';
 import { getTasksByProject, createTask } from '@/lib/db/queries/tasks';
 import { projectExists } from '@/lib/db/queries/projects';
 import { validateDateNotInPast } from '@/lib/utils';
+import { createGetCollectionHandler } from '@/lib/api/handler-utils';
 
-// GET /api/v1/projects/:id/tasks
-async function getTasksHandler(request: NextRequest, { params }: { params: any }) {
-  const { id } = getValidatedParams(projectParamsSchema, params);
-  
-  // Check if project exists
-  if (!(await projectExists(id))) {
-    return NextResponse.json(
-      error(ERROR_CODES.NOT_FOUND, 'Project not found'),
-      { status: 404 }
-    );
-  }
-  
-  const tasks = await getTasksByProject(id);
-  
-  return NextResponse.json(success(tasks));
-}
+// GET /api/v1/projects/:id/tasks - Using generic collection handler
+const getTasksHandler = createGetCollectionHandler(
+  getTasksByProject,
+  projectParamsSchema,
+  projectExists
+);
 
 // POST /api/v1/projects/:id/tasks
-async function createTaskHandler(request: NextRequest, { params }: { params: any }) {
+async function createTaskHandler(request: NextRequest, { params }: { params: Record<string, string | string[]> }) {
   const { id: projectId } = getValidatedParams(projectParamsSchema, params);
   const body = await getValidatedBody(request, createTaskSchema);
   

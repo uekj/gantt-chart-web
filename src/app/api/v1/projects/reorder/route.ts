@@ -1,19 +1,17 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { success } from '@/lib/api/types';
-import { withErrorHandling, getValidatedBody } from '@/lib/api/middleware';
+import { withErrorHandling } from '@/lib/api/middleware';
 import { reorderProjectsSchema } from '@/lib/api/schemas';
 import { reorderProjects } from '@/lib/db/queries/projects';
+import { createReorderHandler } from '@/lib/api/handler-utils';
 
-// PUT /api/v1/projects/reorder
-async function reorderProjectsHandler(request: NextRequest) {
-  const body = await getValidatedBody(request, reorderProjectsSchema);
-  
-  const updatedProjects = await reorderProjects(body.projectIds);
-  
-  return NextResponse.json(success({
-    success: true,
-    updatedProjects
-  }));
+// Adapter function for reorderProjects to match generic handler signature
+async function reorderProjectsAdapter(body: any) {
+  return reorderProjects(body.projectIds);
 }
+
+// PUT /api/v1/projects/reorder - Using generic reorder handler
+const reorderProjectsHandler = createReorderHandler(
+  reorderProjectsAdapter,
+  reorderProjectsSchema
+);
 
 export const PUT = withErrorHandling(reorderProjectsHandler);

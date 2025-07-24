@@ -1,29 +1,21 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { success, error, ERROR_CODES } from '@/lib/api/types';
-import { withErrorHandling, getValidatedBody, getValidatedParams } from '@/lib/api/middleware';
+import { withErrorHandling } from '@/lib/api/middleware';
 import { reorderTasksSchema, projectParamsSchema } from '@/lib/api/schemas';
 import { reorderTasks } from '@/lib/db/queries/tasks';
 import { projectExists } from '@/lib/db/queries/projects';
+import { createNestedReorderHandler } from '@/lib/api/handler-utils';
 
-// PUT /api/v1/projects/:id/tasks/reorder
-async function reorderTasksHandler(request: NextRequest, { params }: { params: Record<string, string | string[]> }) {
-  const { id: projectId } = getValidatedParams(projectParamsSchema, params);
-  const body = await getValidatedBody(request, reorderTasksSchema);
-  
-  // Check if project exists
-  if (!(await projectExists(projectId))) {
-    return NextResponse.json(
-      error(ERROR_CODES.NOT_FOUND, 'Project not found'),
-      { status: 404 }
-    );
-  }
-  
-  const updatedTasks = await reorderTasks(projectId, body.taskIds);
-  
-  return NextResponse.json(success({
-    success: true,
-    updatedTasks
-  }));
+// Adapter function for reorderTasks to match generic handler signature
+async function reorderTasksAdapter(projectId: number, body: any) {
+  return reorderTasks(projectId, body.taskIds);
 }
+
+// PUT /api/v1/projects/:id/tasks/reorder - Using generic nested reorder handler
+const reorderTasksHandler = createNestedReorderHandler(
+  reorderTasksAdapter,
+  projectParamsSchema,
+  reorderTasksSchema,
+  projectExists,
+  'Project not found'
+);
 
 export const PUT = withErrorHandling(reorderTasksHandler);

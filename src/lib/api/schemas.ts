@@ -1,43 +1,66 @@
 import { z } from 'zod';
+import { isDateInPast } from '@/lib/utils';
 
-// Date validation helper
+// Unified date validation helpers
 const dateString = z.string()
   .regex(/^\d{4}-\d{2}-\d{2}$/, 'Must be in YYYY-MM-DD format')
   .refine(val => !isNaN(Date.parse(val)), 'Must be a valid date');
 
+/**
+ * Creates a date validator with configurable past date checking
+ * @param pastAllowed - Whether past dates are allowed (default: false)
+ * @param fieldName - Field name for error messages (default: 'Date')
+ */
+export const createDateValidator = (pastAllowed = false, fieldName = 'Date') => 
+  dateString.refine(
+    val => pastAllowed || !isDateInPast(val), 
+    `${fieldName} cannot be in the past`
+  );
+
+/**
+ * Creates an optional date validator
+ */
+export const createOptionalDateValidator = (pastAllowed = false, fieldName = 'Date') =>
+  createDateValidator(pastAllowed, fieldName).optional();
+
+/**
+ * Creates a unified ID parameter validator
+ * @param fieldName - Field name for error messages (default: 'ID')
+ */
+export const createIdParam = (fieldName = 'ID') => 
+  z.string().transform((val, ctx) => {
+    const num = parseInt(val, 10);
+    if (isNaN(num)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `${fieldName} must be a number`
+      });
+      return z.NEVER;
+    }
+    return num;
+  });
+
 // Project schemas
 export const createProjectSchema = z.object({
   name: z.string().min(1, 'Name is required').max(255, 'Name too long'),
-  startDate: dateString,
+  startDate: createDateValidator(false, 'Start date'),
   insertAfterProjectId: z.number().optional()
-}).refine(data => {
-  const startDate = new Date(data.startDate);
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  return startDate >= today;
-}, {
-  message: 'Start date cannot be in the past',
-  path: ['startDate']
 });
 
 export const updateProjectSchema = z.object({
   name: z.string().min(1, 'Name is required').max(255, 'Name too long').optional(),
-  startDate: dateString.optional()
+  startDate: createOptionalDateValidator(false, 'Start date')
 });
 
 export const projectParamsSchema = z.object({
-  id: z.string().transform(val => {
-    const num = parseInt(val, 10);
-    if (isNaN(num)) throw new Error('ID must be a number');
-    return num;
-  })
+  id: createIdParam('Project ID')
 });
 
 // Task schemas
 export const createTaskSchema = z.object({
   name: z.string().min(1, 'Name is required').max(255, 'Name too long'),
-  startDate: dateString,
-  endDate: dateString,
+  startDate: createDateValidator(false, 'Start date'),
+  endDate: createDateValidator(false, 'End date'),
   insertAfterTaskId: z.number().optional()
 }).refine(data => {
   const start = new Date(data.startDate);
@@ -50,8 +73,8 @@ export const createTaskSchema = z.object({
 
 export const updateTaskSchema = z.object({
   name: z.string().min(1, 'Name is required').max(255, 'Name too long').optional(),
-  startDate: dateString.optional(),
-  endDate: dateString.optional()
+  startDate: createOptionalDateValidator(false, 'Start date'),
+  endDate: createOptionalDateValidator(false, 'End date')
 })
 // NOTE: This validation only checks date consistency when both startDate and endDate 
 // are provided in the update payload. It does not validate against existing data when 
@@ -71,16 +94,8 @@ export const updateTaskSchema = z.object({
 });
 
 export const taskParamsSchema = z.object({
-  id: z.string().transform(val => {
-    const num = parseInt(val, 10);
-    if (isNaN(num)) throw new Error('Project ID must be a number');
-    return num;
-  }),
-  taskId: z.string().transform(val => {
-    const num = parseInt(val, 10);
-    if (isNaN(num)) throw new Error('Task ID must be a number');
-    return num;
-  })
+  id: createIdParam('Project ID'),
+  taskId: createIdParam('Task ID')
 });
 
 // Reorder schemas
